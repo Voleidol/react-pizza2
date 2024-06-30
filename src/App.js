@@ -1,4 +1,5 @@
 import { Route, Router, Routes } from 'react-router-dom';
+import { useState } from 'react';
 import Header from './components/Header';
 import Home from './pages/Home';
 import './scss/app.scss';
@@ -7,11 +8,11 @@ import Cart from './pages/Cart';
 
 
 function App() {
-
+  const [seacrchValue, setSearchValue] = useState('');
 
   return (
     <div className="wrapper">
-      <Header />
+      <Header seacrchValue={seacrchValue} setSearchValue={setSearchValue}/>
       <div className="content">
           <Routes>
             <Route path='/' element={<Home />}/>
