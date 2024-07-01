@@ -15,7 +15,7 @@ function App() {
       <Header seacrchValue={seacrchValue} setSearchValue={setSearchValue}/>
       <div className="content">
           <Routes>
-            <Route path='/' element={<Home />}/>
+            <Route path='/' element={<Home seacrchValue={seacrchValue}/>}/>
             <Route path='/cart' element={<Cart />}/>
             <Route path='*' element={<NotFound />}/>
           </Routes>

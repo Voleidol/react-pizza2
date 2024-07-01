@@ -5,7 +5,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import Sort from '../components/Sort';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
-export default function Home() {
+export default function Home({seacrchValue}) {
 
     
   const [items, setItems] = useState([]);
@@ -19,6 +19,7 @@ export default function Home() {
     const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
     const sortBy = sortType.sortProperty.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : "";
+    const search = seacrchValue > 0 ? `category=${categoryId}` : "";
     fetch(
       `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}`
     )
@@ -28,20 +29,26 @@ export default function Home() {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType]);
+  }, [categoryId, sortType, seacrchValue]);
+
+  const pizzas = items.filter(obj => {
+    return (
+      obj.title.toLowerCase().includes(seacrchValue.toLowerCase())
+    ) 
+  }).map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const skeletons = [...new Array(10)].map((_, index) => <Skeleton key={index}/>);
 
   return (
     <div className="container">
       <div className="content__top">
-            <Categories value={categoryId} onChangeCategory={(i) => setCategoryId(i)}/>
-            <Sort value={sortType} onChangeSort={(i) => setSortType(i)}/>
-          </div>
-          <h2 className="content__title">Все пиццы</h2>
-          <div className="content__items">
-            {isLoading
-              ? [...new Array(10)].map((_, index) => <Skeleton key={index}/>)
-              : items.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
-          </div>
+        <Categories
+          value={categoryId}
+          onChangeCategory={(i) => setCategoryId(i)}
+        />
+        <Sort value={sortType} onChangeSort={(i) => setSortType(i)} />
+      </div>
+      <h2 className="content__title">Все пиццы</h2>
+      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
     </div>
-  )
+  );
 }
