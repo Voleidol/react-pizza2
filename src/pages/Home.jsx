@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
 import Sort from '../components/Sort';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
+import { SearchContext } from '../App';
 
-export default function Home({seacrchValue}) {
-
-    
+const Home = () => {
+  const {searchValue} = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
@@ -21,7 +21,7 @@ export default function Home({seacrchValue}) {
     const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
     const sortBy = sortType.sortProperty.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : "";
-    const search = seacrchValue ? `&search=${seacrchValue}` : "";
+    const search = searchValue ? `&search=${searchValue}` : "";
 
     fetch(
       `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortBy}&order=${order}${search}`,
@@ -32,11 +32,11 @@ export default function Home({seacrchValue}) {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType, seacrchValue, currentPage]);
+  }, [categoryId, sortType, searchValue, currentPage]);
 
   const pizzas = items.filter(obj => {
     return (
-      obj.title.toLowerCase().includes(seacrchValue.toLowerCase())
+      obj.title.toLowerCase().includes(searchValue.toLowerCase())
     ) 
   }).map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(10)].map((_, index) => <Skeleton key={index}/>);
@@ -56,3 +56,5 @@ export default function Home({seacrchValue}) {
     </div>
   );
 }
+
+export default Home
