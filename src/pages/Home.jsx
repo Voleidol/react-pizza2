@@ -9,6 +9,7 @@ import { SearchContext } from '../App';
 
 const Home = () => {
   const {searchValue} = useContext(SearchContext);
+
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
@@ -24,7 +25,7 @@ const Home = () => {
     const search = searchValue ? `&search=${searchValue}` : "";
 
     fetch(
-      `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4${category}&sortBy=${sortBy}&order=${order}${search}`,
+      `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
     )
       .then((res) => res.json())
       .then((arr) => {
@@ -35,10 +36,11 @@ const Home = () => {
   }, [categoryId, sortType, searchValue, currentPage]);
 
   const pizzas = items.filter(obj => {
-    return (
-      obj.title.toLowerCase().includes(searchValue.toLowerCase())
-    ) 
-  }).map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+    if(obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+      return true
+    }
+    return false
+  }).map((obj) => <PizzaBlock key={obj.id} {...obj}/>);
   const skeletons = [...new Array(10)].map((_, index) => <Skeleton key={index}/>);
 
   return (

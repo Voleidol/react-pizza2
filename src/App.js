@@ -6,7 +6,7 @@ import './scss/app.scss';
 import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
 
-export const SearchContext = React.createContext('');
+export const SearchContext = React.createContext({});
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
