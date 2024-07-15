@@ -5,10 +5,6 @@ import styles from './Search.module.scss'
 const Search = () => {
   const {searchValue, setSearchValue} = useContext(SearchContext);
 
-  const onClickClear = () => {
-    setSearchValue('')
-  }
-
   return (
     <div className={styles.root}>
       <svg
@@ -30,7 +26,7 @@ const Search = () => {
       
       {searchValue && (
         <svg
-          onClick={onClickClear}
+          onClick={() => setSearchValue('')}
           className={styles.clearIcon}
           color="#2329D6"
           fill="none"
