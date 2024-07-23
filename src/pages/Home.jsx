@@ -31,23 +31,26 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
-    axios.get(
-      `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    )
-    .then((res) => {
-      setItems(res.data);
-      setIsLoading(false);
-    });
+    // axios.get(
+    //   `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
+    // )
+    // .then((res) => {
+    //   setItems(res.data);
+    //   setIsLoading(false);
+    // });
     
     window.scrollTo(0, 0);
   }, [categoryId, sortType, searchValue, currentPage]);
 
-  const pizzas = items.filter(obj => {
-    if(obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
-      return true
-    }
-    return false
-  }).map((obj) => <PizzaBlock key={obj.id} {...obj}/>);
+  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj}/>);
+  // const pizzas = items.filter(obj => {
+  //   if(obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+  //     return true
+  //   }
+  //   return false
+  // }).map((obj) => <PizzaBlock key={obj.id} {...obj}/>);
+  
+
   const skeletons = [...new Array(10)].map((_, index) => <Skeleton key={index}/>);
 
   return (
