@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
 
@@ -6,6 +6,7 @@ import { setSort } from '../redux/slices/filterSlice';
 function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(state => state.filter.sort)
+  const sortRef = useRef();  //я так понимаю, что вместо document.querySelector='input'(js)
 
   const [open, setOpen] = useState(false);
   const list = [
@@ -21,8 +22,16 @@ function Sort() {
     setOpen(false);
   });
 
+  useEffect(() => {
+    document.body.addEventListener("click", (event) => {
+      if (event.composedPath.includes(sortRef.current)) {
+        console.log('клик на сорт');
+      }
+    });
+  }, []);
+
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
