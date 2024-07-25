@@ -7,7 +7,6 @@ function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(state => state.filter.sort)
   const sortRef = useRef();  //я так понимаю, что вместо document.querySelector='input'(js)
-
   const [open, setOpen] = useState(false);
   const list = [
     { name: "популярности (DESC)", sortProperty: "rating" },
@@ -24,11 +23,25 @@ function Sort() {
 
   useEffect(() => {
     document.body.addEventListener("click", (event) => {
-      if (event.composedPath.includes(sortRef.current)) {
-        console.log('клик на сорт');
+      if (!event.composedPath().includes(sortRef.current)) {
+        setOpen(false);
       }
     });
   }, []);
+
+  // React.useEffect(() =>  {
+  //   const handleClickOutside = (event) => {
+  //     if (!event.composedPath().includes(sortRef.current)) {
+  //       setOpen(false);
+  //     }
+  //   }
+    
+  //   document.body.addEventListener('click', handleClickOutside);  
+    
+  //   return () => { // Сработает при CompanentDidMount (удалении) компаненты 
+  //     document.body.removeEventListener('click', handleClickOutside)
+  //   }
+  // }, []);
 
   return (
     <div ref={sortRef} className="sort">
