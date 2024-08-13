@@ -26,23 +26,33 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   };
 
-  useEffect(() => {
+  const fetchPizzas = async () => {
     setIsLoading(true);
 
-    const order = sortType.includes('-') ? 'asc' : 'desc';
-    const sortBy = sortType.replace('-', '');
+    const order = sortType.includes("-") ? "asc" : "desc";
+    const sortBy = sortType.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
-    axios.get(
+    // await axios.get(
+    //   `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
+    // )
+    // .then((res) => {
+    //   setItems(res.data);
+    //   setIsLoading(false)
+    // });
+
+    const res = await axios.get(
       `https://632d6dfe0d7928c7d24ae553.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    )
-    .then((res) => {
-      setItems(res.data);
-      setIsLoading(false);
-    });
-    
+    );
+    setItems(res.data);
+    setIsLoading(false);
+
     window.scrollTo(0, 0);
+  };
+
+  useEffect(() => {
+    fetchPizzas();
   }, [categoryId, sortType, searchValue, currentPage]);
 
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj}/>);
