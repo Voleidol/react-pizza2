@@ -28,15 +28,15 @@ const pizzaSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchPizzas.pending, (state) => {
       state.status = 'loading';
-      console.log("Идёт отправка");
+      state.items=[];
     });
     builder.addCase(fetchPizzas.fulfilled, (state, action) => {
+      state.items = action.payload;
       state.status = 'success';
-      console.log(state, "Всё ок");
     });
     builder.addCase(fetchPizzas.rejected, (state, action) => {
       state.status = 'error';
-      console.log("Была ошибка");
+      state.items=[];
     });
   },
 });

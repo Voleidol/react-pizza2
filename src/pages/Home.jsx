@@ -15,7 +15,7 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {categoryId, sort, currentPage} = useSelector((state) => state.filter);
-  const items = useSelector((state) => state.pizza.items);
+  const {items, status} = useSelector((state) => state.pizza);
   const sortType = sort.sortProperty;
 
   const {searchValue} = useContext(SearchContext);
@@ -37,18 +37,15 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
-    try {
-      dispatch(fetchPizzas({
-        order, sortBy, category, search, currentPage
-      }));
-    }
-    catch (err) {
-      alert('Ошибка при получении пицц');
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-
+    dispatch(
+      fetchPizzas({
+        order,
+        sortBy,
+        category,
+        search,
+        currentPage,
+      })
+    );
     window.scrollTo(0, 0);
   };
 
@@ -64,15 +61,26 @@ const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories
-          value={categoryId}
-          onChangeCategory={onChangeCategory}
-        />
+        <Categories value={categoryId} onChangeCategory={onChangeCategory} />
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
-      <Pagination currentPage={currentPage} onChangePage = {onChangePage}/>
+      {status === "error" ? (
+        <div className='content__error-info'>
+          <h2>
+            Произошла ошибка <icon>😕</icon>
+          </h2>
+          <p>
+            К сожалению, не удалось получить питсы. Попробуйте повторить попытку позже.
+          </p>
+        </div>
+      ) : (
+        <div className="content__items">
+          {status === "loading" ? skeletons : pizzas}
+        </div>
+      )}
+      {/* <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div> */}
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 }
